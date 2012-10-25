@@ -12,9 +12,9 @@ module Arithmetic
       tokens.each do |token|
         if Operators.operator?(token)
           # clear stack of higher priority operators
-          until (op_stack.empty? or
-                 op_stack.last == "(" or
-                 Operators.priority(op_stack.last) < Operators.priority(token))
+          while (!op_stack.empty? &&
+                 op_stack.last != "(" &&
+                 Operators.priority(op_stack.last) >= Operators.priority(token))
             push_operator(op_stack.pop)
           end
      

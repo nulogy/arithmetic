@@ -34,6 +34,10 @@ describe Arithmetic::Expression do
     expect( test_eval("2 * 2.1 + 1 / 2") ).to eq 4.7
   end
 
+  it "evaluates multiple levels of parens" do
+    test_eval("2*(1/(1+3))").should == 0.5
+  end
+
   it "formats the expression" do
     test_to_s("   1+\n    2*     \t3").should == '1 + (2 * 3)'
   end

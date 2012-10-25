@@ -62,7 +62,7 @@ describe Arithmetic::Expression do
   end
 
   def exp_should_error(exp)
-    expect {test_init exp}.to raise_error InvalidExpression
+    expect {test_init exp}.to raise_error Arithmetic::InvalidExpression
   end
 
   def test_eval(exp)

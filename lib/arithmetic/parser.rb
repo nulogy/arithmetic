@@ -10,11 +10,11 @@ module Arithmetic
       op_stack = []
      
       tokens.each do |token|
-        if Operators.operator?(token)
+        if token.is_a? Operator
           # clear stack of higher priority operators
           while (!op_stack.empty? &&
                  op_stack.last != "(" &&
-                 Operators.priority(op_stack.last) >= Operators.priority(token))
+                 op_stack.last.priority >= token.priority)
             push_operator(op_stack.pop)
           end
      
@@ -58,7 +58,7 @@ module Arithmetic
     end
    
     def tokenize(exp)
-      exp
+      tokens = exp
         .gsub('*', ' * ')
         .gsub('/', ' / ')
         .gsub('+', ' + ')
@@ -66,6 +66,9 @@ module Arithmetic
         .gsub('(', ' ( ')
         .gsub(')', ' ) ')
         .split(' ')
+      tokens.map do |token|
+        Operators.get(token) || token
+      end
     end
 
     def is_a_number?(str)
@@ -73,27 +76,40 @@ module Arithmetic
     end
   end
 
+  class Operator
+    attr_reader :string, :priority
+
+    def initialize(string, priority, function)
+      @string = string
+      @priority = priority
+      @function = function
+    end
+
+    def eval(*args)
+      @function.call(*args)
+    end
+
+    def to_s
+      @string
+    end
+  end
+
   module Operators
     extend self
 
-    @op_priority = {"+" => 0, "-" => 0, "*" => 1, "/" => 1}
-    @op_function = {
-      "+" => lambda {|x, y| x + y},
-      "-" => lambda {|x, y| x - y},
-      "*" => lambda {|x, y| x * y},
-      "/" => lambda {|x, y| x / y}
+    @operators = {
+      "+" => Operator.new("+", 0, lambda {|x, y| x + y}),
+      "-" => Operator.new("-", 0, lambda {|x, y| x - y}),
+      "*" => Operator.new("*", 1, lambda {|x, y| x * y}),
+      "/" => Operator.new("/", 1, lambda {|x, y| x / y})
     }
 
     def get(token)
-      @op_function[token]
-    end
-
-    def operator?(token)
-      @op_priority.has_key?(token)
+      @operators[token]
     end
 
     def priority(token)
-      @op_priority[token]
+      @operators[token].priority
     end
   end
    
@@ -137,7 +153,7 @@ module Arithmetic
     end
    
     def eval
-      Operators.get(@operator).call(@left.eval, @right.eval)
+      @operator.eval(@left.eval, @right.eval)
     end
   end
 

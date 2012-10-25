@@ -2,11 +2,12 @@ module Arithmetic
   class Parser
     def initialize(exp)
       @expression = exp
+      @node_stack = []
     end
 
     def parse
       tokens = tokenize(@expression)
-      op_stack, node_stack = [], []
+      op_stack = []
      
       tokens.each do |token|
         if Operators.operator?(token)
@@ -14,7 +15,7 @@ module Arithmetic
           until (op_stack.empty? or
                  op_stack.last == "(" or
                  Operators.priority(op_stack.last) < Operators.priority(token))
-            push_operator(op_stack.pop, node_stack)
+            push_operator(op_stack.pop)
           end
      
           op_stack.push(token)
@@ -22,38 +23,38 @@ module Arithmetic
           op_stack.push(token)
         elsif token == ")"
           while op_stack.last != "("
-            push_operator(op_stack.pop, node_stack)
+            push_operator(op_stack.pop)
           end
      
           # throw away the '('
           op_stack.pop
         else
-          push_operand(token, node_stack)
+          push_operand(token)
         end
       end
      
       until op_stack.empty?
-        push_operator(op_stack.pop, node_stack)
+        push_operator(op_stack.pop)
       end
      
-      parsed_expression = node_stack.pop
-      raise InvalidExpression.new(@expression) unless node_stack.empty?
+      parsed_expression = @node_stack.pop
+      raise InvalidExpression.new(@expression) unless @node_stack.empty?
       parsed_expression
     end
 
     private
 
-    def push_operand(operand, node_stack)
+    def push_operand(operand)
       raise InvalidExpression.new(@expression) unless is_a_number?(operand)
-      node_stack.push(LeafNode.new(operand))
+      @node_stack.push(LeafNode.new(operand))
     end
 
-    def push_operator(operator, node_stack)
-      right = node_stack.pop
-      left = node_stack.pop
+    def push_operator(operator)
+      right = @node_stack.pop
+      left = @node_stack.pop
       raise InvalidExpression.new(@expression) if left == nil || right == nil
 
-      node_stack.push(OperatorNode.new(operator, left, right))
+      @node_stack.push(OperatorNode.new(operator, left, right))
     end
    
     def tokenize(exp)

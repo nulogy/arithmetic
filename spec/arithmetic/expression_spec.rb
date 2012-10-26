@@ -10,8 +10,15 @@ describe Arithmetic::Expression do
   end
 
   it "handles negative numbers" do
-    # we don't really handle negative numbers now
-    test_eval("3 - (0 - 2)").should == 5
+    test_eval("3--2").should == 5
+  end
+
+  it "handles negative numbers with parens" do
+    test_eval("-(3+2)").should == -5
+  end
+
+  it "handles leading minus signs" do
+    test_eval("-3+2").should == -1
   end
 
   it "evaluates division" do
@@ -39,7 +46,7 @@ describe Arithmetic::Expression do
   end
 
   it "formats the expression" do
-    test_to_s("   1+\n    2*     \t3").should == '1 + (2 * 3)'
+    test_to_s("   -1+\n    2*     \t3").should == '-1 + (2 * 3)'
   end
 
   it "handles ridiculous precision" do

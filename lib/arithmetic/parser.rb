@@ -51,11 +51,14 @@ module Arithmetic
 
     def push_operator(operator)
       raise InvalidExpression.new(@expression) unless operator.is_a?(Operator)
-      right = @node_stack.pop
-      left = @node_stack.pop
-      raise InvalidExpression.new(@expression) if left == nil || right == nil
 
-      @node_stack.push(OperatorNode.new(operator, left, right))
+      operands = []
+      operator.arity.times do
+        operands.unshift(@node_stack.pop)
+      end
+      raise InvalidExpression.new(@expression) if operands.any?(&:nil?)
+
+      @node_stack.push(OperatorNode.new(operator, operands))
     end
    
     def tokenize(exp)
@@ -67,9 +70,27 @@ module Arithmetic
         .gsub('(', ' ( ')
         .gsub(')', ' ) ')
         .split(' ')
+      tokens = parse_operators(tokens)
+      replace_unary_minus(tokens)
+    end
+
+    def parse_operators(tokens)
       tokens.map do |token|
         Operators.get(token) || token
       end
+    end
+
+    def replace_unary_minus(tokens)
+      new_tokens = []
+      tokens.each_with_index do |current_token, i|
+        previous_token = tokens[i-1]
+        if current_token == Operators::MINUS && (i == 0 || previous_token.is_a?(Operator))
+          new_tokens << Operators::UNARY_MINUS
+        else
+          new_tokens << current_token
+        end
+      end
+      new_tokens
     end
 
     def is_a_number?(str)
@@ -93,24 +114,27 @@ module Arithmetic
     def to_s
       @string
     end
+
+    def arity
+      @function.arity
+    end
   end
 
   module Operators
     extend self
 
+    UNARY_MINUS = Operator.new("-", 2, lambda {|x| -x})
+    MINUS = Operator.new("-", 0, lambda {|x, y| x - y})
+
     @operators = {
       "+" => Operator.new("+", 0, lambda {|x, y| x + y}),
-      "-" => Operator.new("-", 0, lambda {|x, y| x - y}),
+      "-" => MINUS,
       "*" => Operator.new("*", 1, lambda {|x, y| x * y}),
       "/" => Operator.new("/", 1, lambda {|x, y| x / y})
     }
 
     def get(token)
       @operators[token]
-    end
-
-    def priority(token)
-      @operators[token].priority
     end
   end
    
@@ -121,7 +145,7 @@ module Arithmetic
       @operand = operand
     end
 
-    def to_s(order=nil, na=nil)
+    def to_s(na=nil)
       @operand
     end
    
@@ -131,30 +155,27 @@ module Arithmetic
   end
 
   class OperatorNode
-    attr_accessor :operator, :left, :right
+    attr_accessor :operator, :operands
    
-    def initialize(operator, left, right)
+    def initialize(operator, operands)
       @operator = operator
-      @left = left
-      @right = right
+      @operands = operands
     end
    
-    def to_s(order=:infix, top=true)
-      left_s, right_s = @left.to_s(order, false), @right.to_s(order, false)
+    def to_s(top=true)
+      strs = @operands.map {|o| o.to_s(false) }
 
-      strs = case order
-             when :prefix then [@operator, left_s, right_s]
-             when :infix then [left_s, @operator, right_s]
-             when :postfix then [left_s, right_s, @operator]
-             else []
-             end
-      result = strs.join(" ") 
-      result = "(" + result + ")" unless top
-      result
+      if @operator.arity == 1
+        "#{@operator}#{strs.first}"
+      else
+        result = [strs.first, @operator, *strs[1..-1]].join(" ")
+        result = "(" + result + ")" unless top
+        result
+      end
     end
    
     def eval
-      @operator.eval(@left.eval, @right.eval)
+      @operator.eval(*@operands.map(&:eval))
     end
   end
 

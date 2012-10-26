@@ -12,7 +12,7 @@ module Arithmetic
     end
 
     def to_s
-      @parsed_expression.to_s(:infix)
+      @parsed_expression.to_s
     end
   end
 end

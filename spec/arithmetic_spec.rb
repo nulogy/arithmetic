@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe Arithmetic do
+  it "evaluates simple expressions" do
+    test_eval("2").should == 2.0
+  end
+
   it "evaluates addition" do
     test_eval("2 + 2").should == 4.0
   end

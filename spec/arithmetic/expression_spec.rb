@@ -63,6 +63,14 @@ describe Arithmetic::Expression do
     it "handles invalid operators" do
       exp_should_error "1 & 2"
     end
+
+    it "handles unmatched leading paren" do
+      exp_should_error "(1 + 2"
+    end
+
+    it "handles unmatched trailing paren" do
+      exp_should_error "1 + 2)"
+    end
   end
 
   def exp_should_error(exp)

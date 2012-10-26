@@ -50,6 +50,7 @@ module Arithmetic
     end
 
     def push_operator(operator)
+      raise InvalidExpression.new(@expression) unless operator.is_a?(Operator)
       right = @node_stack.pop
       left = @node_stack.pop
       raise InvalidExpression.new(@expression) if left == nil || right == nil

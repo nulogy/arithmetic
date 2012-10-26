@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Arithmetic::Expression do
+describe Arithmetic do
   it "evaluates addition" do
     test_eval("2 + 2").should == 4.0
   end

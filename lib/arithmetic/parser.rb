@@ -6,7 +6,7 @@ module Arithmetic
     end
 
     def parse
-      tokens = tokenize(@expression)
+      tokens = Tokenizer.new.tokenize(@expression)
       op_stack = []
      
       tokens.each do |token|
@@ -60,7 +60,13 @@ module Arithmetic
 
       @node_stack.push(OperatorNode.new(operator, operands))
     end
-   
+
+    def is_a_number?(str)
+      !!str.match(/^[\d\.]+$/)
+    end
+  end
+
+  class Tokenizer
     def tokenize(exp)
       tokens = exp
         .gsub('*', ' * ')
@@ -73,6 +79,8 @@ module Arithmetic
       tokens = parse_operators(tokens)
       replace_unary_minus(tokens)
     end
+
+    private
 
     def parse_operators(tokens)
       tokens.map do |token|
@@ -92,11 +100,6 @@ module Arithmetic
       end
       new_tokens
     end
-
-    def is_a_number?(str)
-      !!str.match(/^[\d\.]+$/)
-    end
-  end
   end
 
   class InvalidExpression < Exception

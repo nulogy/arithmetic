@@ -57,6 +57,10 @@ describe Arithmetic do
     test_eval("1.111111111111111111111111111111111111111111 + 2").should == BigDecimal.new('3.111111111111111111111111111111111111111111')
   end
 
+  it "handles simple numbers" do
+    test_eval(2).should == 2
+  end
+
   context "invalid expressions" do
     it "handles missing operand" do
       exp_should_error "1 *"

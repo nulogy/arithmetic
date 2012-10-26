@@ -1,7 +1,7 @@
 module Arithmetic
   class Parser
     def initialize(exp)
-      @expression = exp
+      @expression = exp.to_s
       @node_stack = []
     end
 

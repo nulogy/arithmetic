@@ -21,6 +21,10 @@ describe Arithmetic do
     test_eval("-3+2").should == -1
   end
 
+  it "has unary minus take precedence over multiplication" do
+    test_eval("-3 * -2").should == 6
+  end
+
   it "evaluates division" do
     test_eval("10.5 / 5").should == 2.1
   end

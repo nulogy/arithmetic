@@ -93,6 +93,6 @@ describe Arithmetic::Expression do
   end
 
   def test_init(exp)
-    Arithmetic::Expression.new(exp)
+    Arithmetic::parse(exp)
   end
 end

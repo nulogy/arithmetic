@@ -1,10 +1,7 @@
 module Arithmetic
   class Expression
-    attr_reader :original_expression
-
     def initialize(expression)
-      @original_expression = expression
-      @parsed_expression = Parser.new(expression).parse
+      @parsed_expression = expression
     end
 
     def eval
@@ -12,7 +9,7 @@ module Arithmetic
     end
 
     def to_s
-      @parsed_expression.to_s
+      @string ||= @parsed_expression.to_s
     end
   end
 end

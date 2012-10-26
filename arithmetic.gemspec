@@ -6,8 +6,8 @@ require 'arithmetic/version'
 Gem::Specification.new do |gem|
   gem.name          = "arithmetic"
   gem.version       = Arithmetic::VERSION
-  gem.authors       = ["Sean Kirby"]
-  gem.email         = ["seank@nulogy.com"]
+  gem.authors       = ["Sean Kirby", "Justin Fitzsimmons"]
+  gem.email         = ["seank@nulogy.com", "justin@fitzsimmons.ca"]
   gem.description   = %q{Simple arithmetic calculator for Ruby}
   gem.summary       = %q{Simple arithmetic calculator for Ruby}
   gem.homepage      = "https://github.com/nulogy/arithmetic"

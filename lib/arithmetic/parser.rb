@@ -46,7 +46,7 @@ module Arithmetic
 
     def push_operand(operand)
       raise InvalidExpression.new(@expression) unless is_a_number?(operand)
-      @node_stack.push(LeafNode.new(operand))
+      @node_stack.push(OperandNode.new(operand))
     end
 
     def push_operator(operator)
@@ -138,7 +138,7 @@ module Arithmetic
     end
   end
    
-  class LeafNode
+  class OperandNode
     attr_accessor :operand
    
     def initialize(operand)

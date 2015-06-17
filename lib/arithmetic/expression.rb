@@ -8,8 +8,14 @@ module Arithmetic
       @result ||= @parsed_expression.eval
     end
 
-    def to_s
-      @string ||= @parsed_expression.to_s
+    def to_s(visitor=identity_function)
+      @string ||= @parsed_expression.to_s(visitor)
+    end
+
+    private
+
+    def identity_function
+      ->(node) { node }
     end
   end
 end

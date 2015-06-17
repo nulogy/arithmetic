@@ -57,6 +57,10 @@ describe Arithmetic do
     test_to_s("   -1+\n    2*     \t3").should == '-1 + (2 * 3)'
   end
 
+  it "formats the expression using a custom visitor" do
+    test_to_s("-1 + 2 * 3", ->(n) { "x#{n}x" }).should == 'x-xx1x x+x x(xx2x x*x x3xx)x'
+  end
+
   it "handles ridiculous precision" do
     test_eval("1.111111111111111111111111111111111111111111 + 2").should == BigDecimal.new('3.111111111111111111111111111111111111111111')
   end
@@ -100,8 +104,8 @@ describe Arithmetic do
     test_init(exp).eval
   end
 
-  def test_to_s(exp)
-    test_init(exp).to_s
+  def test_to_s(exp, visitor=nil)
+    test_init(exp).to_s(*visitor)
   end
 
   def test_init(exp)

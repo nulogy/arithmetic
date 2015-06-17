@@ -1,5 +1,10 @@
 module Arithmetic
   class Parser
+
+    def self.is_a_number?(str)
+      str.respond_to?(:to_str) && !!str.to_str.match(/^[\d\.]+$/)
+    end
+
     def initialize(exp)
       @expression = exp.to_s
       @node_stack = []
@@ -45,7 +50,7 @@ module Arithmetic
     private
 
     def push_operand(operand)
-      raise InvalidExpression.new(@expression) unless is_a_number?(operand)
+      raise InvalidExpression.new(@expression) unless Arithmetic::Parser.is_a_number?(operand)
       @node_stack.push(OperandNode.new(operand))
     end
 
@@ -59,10 +64,6 @@ module Arithmetic
       raise InvalidExpression.new(@expression) if operands.any?(&:nil?)
 
       @node_stack.push(OperatorNode.new(operator, operands))
-    end
-
-    def is_a_number?(str)
-      !!str.match(/^[\d\.]+$/)
     end
   end
 

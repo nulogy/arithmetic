@@ -10,7 +10,7 @@ module Arithmetic
     Expression.new(Parser.new(expression).parse)
   end
 
-  def self.is_operand?(token)
-    !token.is_a?(Arithmetic::Operator) && token != "(" && token != ")"
+  def self.is_a_number?(token)
+    Arithmetic::Parser.is_a_number?(token)
   end
 end

@@ -96,6 +96,20 @@ describe Arithmetic do
     end
   end
 
+  describe ".is_a_number?" do
+    it "returns true if argument is a number" do
+      expect(Arithmetic.is_a_number?('23.5')).to eq(true)
+    end
+
+    it "returns false if argument is not a number" do
+      expect(Arithmetic.is_a_number?('2aa23')).to eq(false)
+    end
+
+    it "returns false if argument is not convertible to string" do
+      expect(Arithmetic.is_a_number?(Object.new)).to eq(false)
+    end
+  end
+
   def exp_should_error(exp)
     expect {test_init exp}.to raise_error Arithmetic::InvalidExpression
   end

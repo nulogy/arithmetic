@@ -6,8 +6,8 @@ module Arithmetic
       @operand = operand
     end
 
-    def to_s(na=nil)
-      @operand
+    def to_s(visitor, na=nil)
+      visitor.call(@operand)
     end
    
     def eval
@@ -23,14 +23,14 @@ module Arithmetic
       @operands = operands
     end
    
-    def to_s(top=true)
-      strs = @operands.map {|o| o.to_s(false) }
+    def to_s(visitor, top=true)
+      strs = @operands.map {|o| o.to_s(visitor, false) }
 
       if @operator.arity == 1
-        "#{@operator}#{strs.first}"
+        "#{visitor.call(@operator)}#{strs.first}"
       else
-        result = [strs.first, @operator, *strs[1..-1]].join(" ")
-        result = "(" + result + ")" unless top
+        result = [strs.first, visitor.call(@operator), *strs[1..-1]].join(" ")
+        result = visitor.call("(") + result + visitor.call(")") unless top
         result
       end
     end

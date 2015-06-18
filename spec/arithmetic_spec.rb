@@ -70,6 +70,12 @@ describe Arithmetic do
   end
 
   context "invalid expressions" do
+    it "handles blank expressions" do
+      exp_should_error nil
+      exp_should_error ""
+      exp_should_error "        "
+    end
+
     it "handles missing operand" do
       exp_should_error "1 *"
       exp_should_error "1 * + 1"

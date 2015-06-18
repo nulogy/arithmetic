@@ -6,7 +6,7 @@ module Arithmetic
     end
 
     def initialize(exp)
-      @expression = exp.to_s
+      @expression = exp
       @node_stack = []
     end
 

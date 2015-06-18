@@ -7,6 +7,9 @@ require 'arithmetic/operators'
 module Arithmetic
   # make lazy?
   def self.parse(expression)
+    expression = expression.to_s.strip
+    raise Arithmetic::InvalidExpression if expression.empty?
+
     Expression.new(Parser.new(expression).parse)
   end
 

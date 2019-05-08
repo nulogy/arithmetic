@@ -11,7 +11,17 @@ module Arithmetic
     end
    
     def eval
-      BigDecimal.new(@operand)
+      if has_dangling_decimal_point?
+        BigDecimal.new(@operand + "0")
+      else
+        BigDecimal.new(@operand)
+      end
+    end
+
+    private
+
+    def has_dangling_decimal_point?
+      @operand.is_a?(String) && @operand.end_with?(".")
     end
   end
 

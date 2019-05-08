@@ -69,6 +69,10 @@ describe Arithmetic do
     test_eval(2).should == 2
   end
 
+  it "handles dangling decimal points" do
+    test_eval("0.").should == 0
+  end
+
   context "invalid expressions" do
     it "handles blank expressions" do
       exp_should_error nil

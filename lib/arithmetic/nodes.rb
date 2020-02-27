@@ -12,9 +12,9 @@ module Arithmetic
    
     def eval
       if has_dangling_decimal_point?
-        BigDecimal.new(@operand + "0")
+        BigDecimal(@operand + "0")
       else
-        BigDecimal.new(@operand)
+        BigDecimal(@operand)
       end
     end
 

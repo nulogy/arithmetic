@@ -62,7 +62,7 @@ describe Arithmetic do
   end
 
   it "handles ridiculous precision" do
-    test_eval("1.111111111111111111111111111111111111111111 + 2").should == BigDecimal.new('3.111111111111111111111111111111111111111111')
+    test_eval("1.111111111111111111111111111111111111111111 + 2").should == BigDecimal('3.111111111111111111111111111111111111111111')
   end
 
   it "handles simple numbers" do

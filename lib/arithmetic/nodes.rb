@@ -1,7 +1,7 @@
-module Arithmetic 
+module Arithmetic
   class OperandNode
     attr_accessor :operand
-   
+
     def initialize(operand)
       @operand = operand
     end
@@ -9,12 +9,12 @@ module Arithmetic
     def to_s(visitor, na=nil)
       visitor.call(@operand)
     end
-   
+
     def eval
       if has_dangling_decimal_point?
-        BigDecimal.new(@operand + "0")
+        BigDecimal(@operand + "0")
       else
-        BigDecimal.new(@operand)
+        BigDecimal(@operand)
       end
     end
 
@@ -27,12 +27,12 @@ module Arithmetic
 
   class OperatorNode
     attr_accessor :operator, :operands
-   
+
     def initialize(operator, operands)
       @operator = operator
       @operands = operands
     end
-   
+
     def to_s(visitor, top=true)
       strs = @operands.map {|o| o.to_s(visitor, false) }
 
@@ -44,7 +44,7 @@ module Arithmetic
         result
       end
     end
-   
+
     def eval
       @operator.eval(*@operands.map(&:eval))
     end
